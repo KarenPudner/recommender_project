@@ -13,7 +13,7 @@ def test_average_rating():
     assert average[1] == 4
 
 
-def test_convert_ratings_to_film_list():
+def test_filter_out_films_below_average_rating():
     ratings = {'CustomerId': ['1', '1', '1','2','2','2'],
              'FilmId': ['4', '5', '6','20', '21','22'],
              'Rating': [4,3,2,4,5,3],
@@ -21,11 +21,25 @@ def test_convert_ratings_to_film_list():
 
     df = pd.DataFrame.from_dict(ratings)
 
-    average = ratings_converter.find_average_rating_per_customer(df)
-    converted_list=ratings_converter.convert_customer_rating_to_film_list(df)
-    expected = {
-        '1': ['4', '5'],
-        '2': ['20','21']
-    }
+    filtered=ratings_converter.filter_out_films_below_average_rating(df)
 
-    assert converted_list.shape==(4,4)
+    assert filtered.shape==(4,4)
+    assert filtered.iloc[0]['FilmId']=='4'
+    assert filtered.shape == (4, 4)
+    assert filtered.iloc[1]['FilmId'] == '5'
+    assert filtered.shape == (4, 4)
+    assert filtered.iloc[2]['FilmId'] == '20'
+    assert filtered.shape == (4, 4)
+    assert filtered.iloc[3]['FilmId'] == '21'
+
+
+def test_convert_grouped_films_to_dictionary():
+    filtered_ratings={'CustomerId': ['1', '1', '2','2'],
+                    'FilmId': ['4', '5','20', '21'],
+                    'Rating': [4,3,4,5],
+                    'TimeStamp': [978302109,978302109,978302109,978302109]}
+    df = pd.DataFrame.from_dict(filtered_ratings)
+
+    film_dictionary=ratings_converter.convert_filtered_ratings_to_film_dictionary(df)
+    assert film_dictionary['1']==['4','5']
+    assert film_dictionary['2'] == ['20', '21']
