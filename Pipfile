@@ -8,6 +8,7 @@ ipykernel = "*"
 pandas = "*"
 sklearn = "*"
 pytest = "*"
+gensim = "*"
 
 [dev-packages]
 

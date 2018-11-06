@@ -33,13 +33,13 @@ def test_filter_out_films_below_average_rating():
     assert filtered.iloc[3]['FilmId'] == '21'
 
 
-def test_convert_grouped_films_to_dictionary():
+def test_convert_grouped_film_to_list_of_lists():
     filtered_ratings={'CustomerId': ['1', '1', '2','2'],
                     'FilmId': ['4', '5','20', '21'],
                     'Rating': [4,3,4,5],
                     'TimeStamp': [978302109,978302109,978302109,978302109]}
     df = pd.DataFrame.from_dict(filtered_ratings)
 
-    film_dictionary=ratings_converter.convert_filtered_ratings_to_film_dictionary(df)
-    assert film_dictionary['1']==['4','5']
-    assert film_dictionary['2'] == ['20', '21']
+    film_list_of_lists=ratings_converter.convert_filtered_ratings_to_film_list_of_lists(df)
+    assert film_list_of_lists[0]==['4','5']
+    assert film_list_of_lists[1] == ['20', '21']
