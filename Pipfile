@@ -9,6 +9,7 @@ pandas = "*"
 sklearn = "*"
 pytest = "*"
 gensim = "*"
+numpy = "*"
 
 [dev-packages]
 
