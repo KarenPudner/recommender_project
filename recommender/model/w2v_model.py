@@ -9,9 +9,13 @@ class W2VModel:
 
     def train_model(self,lists_of_films, vector_dimension):
         self.model = Word2Vec(lists_of_films, size=vector_dimension, window=5, min_count=1)
+        self.model.save("word2vec.model")
 
     def get_model_vocabulary(self):
-        return self.model.wv.vocab
+        return self.get_model().wv.vocab
+
+    def get_model(self):
+        return Word2Vec.load("word2vec.model")
 
 
     # def evaluate(self, playlists):
@@ -36,7 +40,7 @@ class W2VModel:
 
     def retrieve_input_and_output_vectors_for_item(self, history_items):
         # Also only consider items that are featured in the model vocabulary
-        return [self.model.wv[v] for v in history_items if v in self.model.wv.vocab]
+        return [self.get_model().wv[v] for v in history_items if v in self.get_model().wv.vocab]
 
     def aggregate_item_input_and_output_vectors(self, item_vectors, method='average'):
         if len(item_vectors) > 0:
@@ -63,8 +67,8 @@ class W2VModel:
 
         # Keep generating recommendations until required number is achieved while
         # discounting all recommendations that have been seen.
-        while len(rec_list) < k and kk < len(self.model.wv.vocab):
-            recommended_items = self.model.wv.most_similar(positive=[user_embedding], topn=kk)
+        while len(rec_list) < k and kk < len(self.get_model().wv.vocab):
+            recommended_items = self.get_model().wv.most_similar(positive=[user_embedding], topn=kk)
             rec_list = [i[0] for i in recommended_items if i[0] not in user_history]
             kk += 1
 
