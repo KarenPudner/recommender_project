@@ -61,15 +61,15 @@ class W2VModel:
         item_embeddings = self.retrieve_input_and_output_vectors_for_item(user_history)
         return self.aggregate_item_input_and_output_vectors(item_embeddings, method)
 
-    def predict(self, user_embedding, user_history, k):
+    def predict(self, user_embedding, user_history, required_recommendation_list_length):
         rec_list = list()
-        kk = k
+        number_of_recommendations_requested_from_model = required_recommendation_list_length
 
         # Keep generating recommendations until required number is achieved while
         # discounting all recommendations that have been seen.
-        while len(rec_list) < k and kk < len(self.get_model().wv.vocab):
-            recommended_items = self.get_model().wv.most_similar(positive=[user_embedding], topn=kk)
+        while len(rec_list) < required_recommendation_list_length and number_of_recommendations_requested_from_model < len(self.get_model().wv.vocab):
+            recommended_items = self.get_model().wv.most_similar(positive=[user_embedding], topn=number_of_recommendations_requested_from_model)
             rec_list = [i[0] for i in recommended_items if i[0] not in user_history]
-            kk += 1
+            number_of_recommendations_requested_from_model += 1
 
         return rec_list
