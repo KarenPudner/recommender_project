@@ -25,11 +25,8 @@ def test_filter_out_films_below_average_rating():
 
     assert filtered.shape==(4,4)
     assert filtered.iloc[0]['FilmId']=='4'
-    assert filtered.shape == (4, 4)
     assert filtered.iloc[1]['FilmId'] == '5'
-    assert filtered.shape == (4, 4)
     assert filtered.iloc[2]['FilmId'] == '20'
-    assert filtered.shape == (4, 4)
     assert filtered.iloc[3]['FilmId'] == '21'
 
 

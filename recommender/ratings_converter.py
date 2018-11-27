@@ -12,5 +12,4 @@ def filter_out_films_below_average_rating(ratings):
 def convert_filtered_ratings_to_film_list_of_lists(filtered_ratings):
     filtered_ratings['FilmId'] = filtered_ratings['FilmId'].apply(str)
     film_dictionary = dict(filtered_ratings.groupby('CustomerId')['FilmId'].apply(list))
-    l = list(film_dictionary.values())
-    return l
+    return list(film_dictionary.values())
