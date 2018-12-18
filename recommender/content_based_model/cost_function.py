@@ -2,24 +2,22 @@ import numpy as np
 
 
 def get_cost_function(film_features, user_parameters, Y, lambda_value):
+
+
     ratings = np.matmul(film_features, np.transpose(user_parameters))
     error = np.subtract(ratings, Y)
 
-    Y[Y > 0] = 1
+    R = np.where(Y > 0, 1, Y)
 
-    print(Y)
-    print(error)
-    error_factor = np.multiply(error, Y)
-    print(error_factor)
-    error_squared = np.multiply(error_factor, error_factor)
-    print(error_squared)
-    J = ((sum(sum(error_squared))) / 2)
+    error_factor = np.multiply(error, R)
+    error_squared = np.square(error_factor)
 
-    # regularised_X = sum(sum(X. ^ 2)) * (lambda / 2);
-    #                                            regularised_Theta=sum(sum(Theta.^ 2)) * ( lambda / 2);
-    #                                            J=((sum(sum(error_squared))) / 2)+ regularised_X + regularised_Theta;
-    #
-    #
-    #                                            X_grad = error_factor * Theta + X.* lambda;
-    #                                            Theta_grad = error_factor' * X + Theta.*lambda;
-    return J
+    regularised_film_features = ((np.square(film_features)).sum()) * (lambda_value/2)
+    regularised_user_parameters = ((np.square(user_parameters)).sum()) * (lambda_value / 2)
+
+    J = ((sum(sum(error_squared))) / 2) + regularised_film_features + regularised_user_parameters
+
+    film_features_grad = np.matmul(error_factor, user_parameters) + np.multiply(film_features, lambda_value)
+    user_parameters_grad = np.matmul(np.transpose(error_factor), film_features) + np.multiply(user_parameters, lambda_value)
+
+    return [J, film_features_grad, user_parameters_grad]
