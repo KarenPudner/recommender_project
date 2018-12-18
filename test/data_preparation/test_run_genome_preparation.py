@@ -1,0 +1,1 @@
+from recommender.data_preparation import run_genome_preparation
